@@ -1,0 +1,19 @@
+{
+    "name": "mop/hugbearbundle",
+    "description": "Free Hugs",
+    "authors": [
+        {
+            "name": "Andreas Streichardt",
+            "email": "andreas.streichardt@gmail.com"
+        }
+    ],
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": { "Mop\\HugbearBundle": "" }
+    },
+    "target-dir": "Mop/HugbearBundle",
+    "require": {
+        "symfony/framework-bundle": "2.1.*"
+    }
+}

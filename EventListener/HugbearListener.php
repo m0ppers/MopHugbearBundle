@@ -1,0 +1,47 @@
+<?php
+namespace Mop\HugbearBundle\EventListener;
+
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+class HugbearListener implements EventSubscriberInterface
+{
+    private $twigEngine;
+
+    public function __construct(TwigEngine $twigEngine)
+    {
+        $this->twigEngine = $twigEngine;
+    }
+
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
+        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+            return;
+        }
+
+        $response = $event->getResponse();
+        $request = $event->getRequest();
+
+        if ($request->isXmlHttpRequest() || $response->isRedirect()) {
+            return;
+        }
+        
+        $content = $response->getContent();
+        if (($pos = strpos($content, '<body')) !== false && in_array(substr($content, $pos+5, 1), array('>', ' '))) {
+            $insertPosition = strpos($content, '>', $pos) + 1;
+            
+            $hugbear = $this->twigEngine->render('MopHugbearBundle:Hugbear:hugbear.html.twig');
+            $response->setContent(substr($content, 0, $insertPosition) . $hugbear . substr($content, $insertPosition));
+        }
+    }
+    
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::RESPONSE => array('onKernelResponse'),
+        );
+    }
+}

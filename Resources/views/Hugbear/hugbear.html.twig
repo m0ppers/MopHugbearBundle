@@ -1,0 +1,61 @@
+<canvas id="hugbear_canvas" style="position:fixed;top:0px;left:0px;pointer-events:none"></canvas>
+<script type="text/javascript">
+if (!window.requestAnimationFrame) {
+    window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+}
+var canvas=document.getElementById('hugbear_canvas');
+var context=canvas.getContext('2d');
+if (!context) {
+    if (console && console.log) {
+        console.log('Canvas not supported!');
+    }
+    return;
+}
+
+var img=new Image();
+img.onload = function() {
+    canvas.setAttribute('width', window.innerWidth);
+    canvas.setAttribute('height', window.innerHeight);
+    var hugbears = [];
+    for (var i = 0; i < 100; i++) {
+        hugbears.push({ position: [ Math.random() * canvas.width, Math.random() * canvas.height],
+                        rotation: Math.random() * 4 - 2,
+                        sx: Math.random() * 4 - 2,
+                        sy: Math.random() * 4 - 2
+                       });
+    }
+
+    (function animation() {
+        requestAnimFrame(animation);
+        var tmp;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i=0;i<hugbears.length;i++) {
+            var hugbear=hugbears[i];
+            hugbear.rotation+=0.01;
+            hugbear.position[0] += hugbear.sx;
+            hugbear.position[1] += hugbear.sy;
+            if (hugbear.position[0] >= canvas.width || hugbear.position[0] <= 0) {
+                hugbear.sx = -hugbear.sx;
+            } else if (hugbear.position[1] >= canvas.height || hugbear.position[1] <= 0) {
+                hugbear.sy = -hugbear.sy;
+            }
+            context.save();
+            context.translate(hugbear.position[0] + img.width/2, hugbear.position[1] + img.height/2);
+            context.rotate(hugbear.rotation);
+            context.drawImage(img, -img.width/2, -img.height/2);//, img.width, img.height);
+            context.restore();
+        }
+    })();
+}
+img.src = '{{ asset('bundles/mophugbear/images/hugbear.png') }}';
+
+</script>
