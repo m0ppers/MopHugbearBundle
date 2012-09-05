@@ -1,0 +1,8 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <img src="{{ asset('bundles/mophugbear/images/hugbear.png') }}" onclick="{{ collector.getObjname() }}.toggle(); return false;"/>
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': false } %}
+{% endblock %}

@@ -12,50 +12,77 @@ if (!window.requestAnimationFrame) {
               };
     })();
 }
-var canvas=document.getElementById('hugbear_canvas');
-var context=canvas.getContext('2d');
-if (!context) {
-    if (console && console.log) {
-        console.log('Canvas not supported!');
-    }
-    return;
-}
 
-var img=new Image();
-img.onload = function() {
-    canvas.setAttribute('width', window.innerWidth);
-    canvas.setAttribute('height', window.innerHeight);
-    var hugbears = [];
-    for (var i = 0; i < 100; i++) {
-        hugbears.push({ position: [ Math.random() * canvas.width, Math.random() * canvas.height],
-                        rotation: Math.random() * 4 - 2,
-                        sx: Math.random() * 4 - 2,
-                        sy: Math.random() * 4 - 2
-                       });
+var {{ objname }} = {
+    activated: false,
+show: function() {
+    this.activated = true;
+          this.canvas=document.getElementById('hugbear_canvas');
+          this.context=this.canvas.getContext('2d');
+          if (!this.context) {
+              if (console && console.log) {
+                  console.log('Canvas not supported!');
+              }
+              return;
+          }
+          this.img=new Image();
+          var self=this;
+          this.img.onload = function() {
+              self.canvas.setAttribute('width', window.innerWidth);
+              self.canvas.setAttribute('height', window.innerHeight);
+              self.hugbears = [];
+              for (var i = 0; i < 100; i++) {
+                  self.hugbears.push({ position: [ Math.random() * self.canvas.width, Math.random() * self.canvas.height],
+                          rotation: Math.random() * 4 - 2,
+                          sx: Math.random() * 4 - 2,
+                          sy: Math.random() * 4 - 2
+                          });
+              }
+              self.animate();
+          };
+          this.img.src = '{{ asset('bundles/mophugbear/images/hugbear.png') }}';
+      },
+animate: function() {
+             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+             var tmp;
+             var self = this;
+             if (!this.activated)
+                 return;
+
+             requestAnimFrame(function() {
+                     return self.animate();
+                     });
+             for (var i=0;i<this.hugbears.length;i++) {
+                 var hugbear=this.hugbears[i];
+                 hugbear.rotation+=0.01;
+                 hugbear.position[0] += hugbear.sx;
+                 hugbear.position[1] += hugbear.sy;
+                 if (hugbear.position[0] >= this.canvas.width || hugbear.position[0] <= 0) {
+                     hugbear.sx = -hugbear.sx;
+                 } else if (hugbear.position[1] >= this.canvas.height || hugbear.position[1] <= 0) {
+                     hugbear.sy = -hugbear.sy;
+                 }
+                 this.context.save();
+                 this.context.translate(hugbear.position[0] + this.img.width/2, hugbear.position[1] + this.img.height/2);
+                 this.context.rotate(hugbear.rotation);
+                 this.context.drawImage(this.img, -this.img.width/2, -this.img.height/2);//, this.img.width, this.img.height);
+                 this.context.restore();
+             }
+         },
+hide: function() {
+    this.activated = false;
+      },
+toggle: function() {
+    if (this.activated) {
+        this.hide();
+    } else {
+        this.show();
     }
 
-    (function animation() {
-        requestAnimFrame(animation);
-        var tmp;
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i=0;i<hugbears.length;i++) {
-            var hugbear=hugbears[i];
-            hugbear.rotation+=0.01;
-            hugbear.position[0] += hugbear.sx;
-            hugbear.position[1] += hugbear.sy;
-            if (hugbear.position[0] >= canvas.width || hugbear.position[0] <= 0) {
-                hugbear.sx = -hugbear.sx;
-            } else if (hugbear.position[1] >= canvas.height || hugbear.position[1] <= 0) {
-                hugbear.sy = -hugbear.sy;
-            }
-            context.save();
-            context.translate(hugbear.position[0] + img.width/2, hugbear.position[1] + img.height/2);
-            context.rotate(hugbear.rotation);
-            context.drawImage(img, -img.width/2, -img.height/2);//, img.width, img.height);
-            context.restore();
-        }
-    })();
 }
-img.src = '{{ asset('bundles/mophugbear/images/hugbear.png') }}';
+};
+{% if autoplay %}
+{{ objname }}.show();
+{% endif %}
 
 </script>

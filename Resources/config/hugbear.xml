@@ -6,12 +6,20 @@
 
     <parameters>
         <parameter key="mop_hugbear.hugger.class">Mop\HugbearBundle\EventListener\HugbearListener</parameter>
+        <parameter key="mop_hugbear.datacollector.class">Mop\HugbearBundle\DataCollector\HugbearDataCollector</parameter>
     </parameters>
 
     <services>
         <service id="mop_hugbear.hugger" class="%mop_hugbear.hugger.class%">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="templating.engine.twig" />
+            <argument>%mop_hugbear.autoplay%</argument>
+            <argument>%mop_hugbear.objname%</argument>
+        </service>
+        <service id="mop_hugbear.datacollector" class="%mop_hugbear.datacollector.class%">
+            <tag name="data_collector" template="MopHugbearBundle:Hugbear:datacollector" id="hugbear" />
+            <argument>%mop_hugbear.autoplay%</argument>
+            <argument>%mop_hugbear.objname%</argument>
         </service>
     </services>
 </container>

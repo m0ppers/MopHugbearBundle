@@ -10,10 +10,14 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class HugbearListener implements EventSubscriberInterface
 {
     private $twigEngine;
+    private $autoplay;
+    private $objname;
 
-    public function __construct(TwigEngine $twigEngine)
+    public function __construct(TwigEngine $twigEngine, $autoplay, $objname)
     {
-        $this->twigEngine = $twigEngine;
+        $this->twigEngine   = $twigEngine;
+        $this->autoplay     = $autoplay;
+        $this->objname = $objname;
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -33,7 +37,10 @@ class HugbearListener implements EventSubscriberInterface
         if (($pos = strpos($content, '<body')) !== false && in_array(substr($content, $pos+5, 1), array('>', ' '))) {
             $insertPosition = strpos($content, '>', $pos) + 1;
             
-            $hugbear = $this->twigEngine->render('MopHugbearBundle:Hugbear:hugbear.html.twig');
+            $arguments = array('autoplay' => $this->autoplay,
+                               'objname'  => $this->objname,
+                              );
+            $hugbear = $this->twigEngine->render('MopHugbearBundle:Hugbear:hugbear.html.twig', $arguments);
             $response->setContent(substr($content, 0, $insertPosition) . $hugbear . substr($content, $insertPosition));
         }
     }
