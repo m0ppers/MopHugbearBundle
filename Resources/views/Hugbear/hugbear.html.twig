@@ -18,6 +18,9 @@ var {{ objname }} = {
     config: {{ hugbearconfig|json_encode|raw }},
     show: function() {
         this.activated = true;
+        if (localStorage && localStorage.setItem) {
+            localStorage.setItem('hugbears_activated', true);
+        }
         this.canvas=document.getElementById('hugbear_canvas');
         this.context=this.canvas.getContext('2d');
         if (!this.context) {
@@ -86,6 +89,9 @@ var {{ objname }} = {
         }
     },
     hide: function() {
+        if (localStorage && localStorage.setItem) {
+            localStorage.setItem('hugbears_activated', false);
+        }
         this.activated = false;
     },
     toggle: function() {
@@ -98,6 +104,10 @@ var {{ objname }} = {
 };
 {% if autoplay %}
 {{ objname }}.show();
+{% else %}
+if (localStorage && localStorage.getItem && localStorage.getItem('hugbears_activated') == 'true') {
+    {{ objname }}.show();
+}
 {% endif %}
 
 </script>
