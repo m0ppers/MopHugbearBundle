@@ -12,12 +12,14 @@ class HugbearListener implements EventSubscriberInterface
     private $twigEngine;
     private $autoplay;
     private $objname;
+    private $hugbearConfig;
 
-    public function __construct(TwigEngine $twigEngine, $autoplay, $objname)
+    public function __construct(TwigEngine $twigEngine, $autoplay, $objname, array $hugbearConfig)
     {
-        $this->twigEngine   = $twigEngine;
-        $this->autoplay     = $autoplay;
-        $this->objname = $objname;
+        $this->twigEngine    = $twigEngine;
+        $this->autoplay      = $autoplay;
+        $this->objname       = $objname;
+        $this->hugbearConfig = $hugbearConfig;
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -37,8 +39,9 @@ class HugbearListener implements EventSubscriberInterface
         if (($pos = strpos($content, '<body')) !== false && in_array(substr($content, $pos+5, 1), array('>', ' '))) {
             $insertPosition = strpos($content, '>', $pos) + 1;
             
-            $arguments = array('autoplay' => $this->autoplay,
-                               'objname'  => $this->objname,
+            $arguments = array('autoplay'      => $this->autoplay,
+                               'objname'       => $this->objname,
+                               'hugbearconfig' => $this->hugbearConfig,
                               );
             $hugbear = $this->twigEngine->render('MopHugbearBundle:Hugbear:hugbear.html.twig', $arguments);
             $response->setContent(substr($content, 0, $insertPosition) . $hugbear . substr($content, $insertPosition));

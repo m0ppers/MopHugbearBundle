@@ -23,6 +23,11 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('autoplay')->defaultFalse()->end()
+                ->scalarNode('hugbears')->defaultValue(100)->end()
+                ->scalarNode('minspeed')->defaultValue(0.5)->end()
+                ->scalarNode('maxspeed')->defaultValue(2)->end()
+                ->scalarNode('minrotation')->defaultValue(0.001)->end()
+                ->scalarNode('maxrotation')->defaultValue(0.1)->end()
             ->end();
 
         return $treeBuilder;

@@ -2,8 +2,8 @@
 
 {% block toolbar %}
     {% set icon %}
-        <a href="javascript:{{ collector.getObjname() }}.toggle(); return false;">
-            <img src="{{ asset('bundles/mophugbear/images/hugbear.png') }}"/>
+        <a href="javascript://">
+            <img src="{{ asset('bundles/mophugbear/images/hugbear.png') }}" onclick="{{ collector.getObjname() }}.toggle(); return false;"/>
         </a>
     {% endset %}
     {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': false } %}

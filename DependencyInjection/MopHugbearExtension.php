@@ -24,6 +24,20 @@ class MopHugbearExtension extends Extension
 
         $container->setParameter('mop_hugbear.autoplay', (bool) $config['autoplay']);
         $container->setParameter('mop_hugbear.objname', 'hugit' . uniqid());
+
+        $hugbearConfig = array();
+        foreach (array('hugbears', 'minspeed', 'maxspeed', 'minrotation', 'maxrotation') as $option) {
+            $hugbearConfig[$option] = (float) $config[$option];
+        }
+        foreach (array('speed', 'rotation') as $option) {
+            if ($hugbearConfig['min' . $option] < 0) {
+                throw new \InvalidArgumentException('min' . $option . ' must be at least 0');
+            }
+            if ($hugbearConfig['min' . $option] > $hugbearConfig['max' . $option]) {
+                throw new \InvalidArgumentException('max' . $option . ' must be greater or equal than min' . $option);
+            }
+        }
+        $container->setParameter('mop_hugbear.hugbearconfig', $hugbearConfig);
         
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('hugbear.xml');
