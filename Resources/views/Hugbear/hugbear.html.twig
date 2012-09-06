@@ -16,72 +16,85 @@ if (!window.requestAnimationFrame) {
 var {{ objname }} = {
     activated: false,
     config: {{ hugbearconfig|json_encode|raw }},
-show: function() {
-    this.activated = true;
-          this.canvas=document.getElementById('hugbear_canvas');
-          this.context=this.canvas.getContext('2d');
-          if (!this.context) {
-              if (console && console.log) {
-                  console.log('Canvas not supported!');
-              }
-              return;
-          }
-          this.img=new Image();
-          var self=this;
-          this.img.onload = function() {
-              self.canvas.setAttribute('width', window.innerWidth);
-              self.canvas.setAttribute('height', window.innerHeight);
-              self.hugbears = [];
-              for (var i = 0; i < self.config.hugbears; i++) {
-                  self.hugbears.push({ position: [ Math.random() * self.canvas.width, Math.random() * self.canvas.height],
-                          rotation: Math.random() * 360 * Math.PI / 180,
-                          srotation: self.config.minrotation + (self.config.maxrotation-self.config.minrotation) * Math.random() *  (Math.random() > 0.5 ? -1 : 1),
-                          sx: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1),
-                          sy: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1),
-                          });
-              }
-              self.animate();
-          };
-          this.img.src = '{{ asset('bundles/mophugbear/images/hugbear.png') }}';
-      },
-animate: function() {
-             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-             var tmp;
-             var self = this;
-             if (!this.activated)
-                 return;
+    show: function() {
+        this.activated = true;
+        this.canvas=document.getElementById('hugbear_canvas');
+        this.context=this.canvas.getContext('2d');
+        if (!this.context) {
+            if (console && console.log) {
+                console.log('Canvas not supported!');
+            }
+            return;
+        }
+        this.img=new Image();
+        var self=this;
+        this.img.onload = function() {
+            self.canvas.setAttribute('width', window.innerWidth);
+            self.canvas.setAttribute('height', window.innerHeight);
+            self.hugbears = [];
+            for (var i = 0; i < self.config.hugbears; i++) {
+                self.hugbears.push({ position: [ Math.random() * self.canvas.width, Math.random() * self.canvas.height],
+                    rotation: Math.random() * 360 * Math.PI / 180,
+                    srotation: self.config.minrotation + (self.config.maxrotation-self.config.minrotation) * Math.random() *  (Math.random() > 0.5 ? -1 : 1),
+                    sx: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1),
+                    sy: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1),
+                });
+            }
+            self.animate();
+        };
+        this.img.src = '{{ asset('bundles/mophugbear/images/hugbear.png') }}';
+        window.onresize = function() {
+            if (!self.activated)
+                return;
+            self.canvas.setAttribute('width', window.innerWidth);
+            self.canvas.setAttribute('height', window.innerHeight);
+            for (var i = 0; i < self.config.hugbears; i++) {
+                if (self.hugbears.position[0] > self.canvas.width) {
+                    self.hugbears.position[0] = self.canvas.width;
+                }
+                if (self.hugbears.position[1] > self.canvas.height) {
+                    self.hugbears.position[1] = self.canvas.height;
+                }
+            }
+        };
+    },
+    animate: function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        var tmp;
+        var self = this;
+        if (!this.activated)
+            return;
 
-             requestAnimFrame(function() {
-                     return self.animate();
-                     });
-             for (var i=0;i<this.hugbears.length;i++) {
-                 var hugbear=this.hugbears[i];
-                 hugbear.rotation+=hugbear.srotation;
-                 hugbear.position[0] += hugbear.sx;
-                 hugbear.position[1] += hugbear.sy;
-                 if (hugbear.position[0] >= this.canvas.width || hugbear.position[0] <= 0) {
-                     hugbear.sx = -hugbear.sx;
-                 } else if (hugbear.position[1] >= this.canvas.height || hugbear.position[1] <= 0) {
-                     hugbear.sy = -hugbear.sy;
-                 }
-                 this.context.save();
-                 this.context.translate(hugbear.position[0] + this.img.width/2, hugbear.position[1] + this.img.height/2);
-                 this.context.rotate(hugbear.rotation);
-                 this.context.drawImage(this.img, -this.img.width/2, -this.img.height/2);//, this.img.width, this.img.height);
-                 this.context.restore();
-             }
-         },
-hide: function() {
-    this.activated = false;
-      },
-toggle: function() {
-    if (this.activated) {
-        this.hide();
-    } else {
-        this.show();
+        requestAnimFrame(function() {
+            return self.animate();
+        });
+        for (var i=0;i<this.hugbears.length;i++) {
+            var hugbear=this.hugbears[i];
+            hugbear.rotation+=hugbear.srotation;
+            hugbear.position[0] += hugbear.sx;
+            hugbear.position[1] += hugbear.sy;
+            if (hugbear.position[0] >= this.canvas.width || hugbear.position[0] <= 0) {
+                hugbear.sx = -hugbear.sx;
+            } else if (hugbear.position[1] >= this.canvas.height || hugbear.position[1] <= 0) {
+                hugbear.sy = -hugbear.sy;
+            }
+            this.context.save();
+            this.context.translate(hugbear.position[0] + this.img.width/2, hugbear.position[1] + this.img.height/2);
+            this.context.rotate(hugbear.rotation);
+            this.context.drawImage(this.img, -this.img.width/2, -this.img.height/2);//, this.img.width, this.img.height);
+            this.context.restore();
+        }
+    },
+    hide: function() {
+        this.activated = false;
+    },
+    toggle: function() {
+        if (this.activated) {
+            this.hide();
+        } else {
+            this.show();
+        }
     }
-
-}
 };
 {% if autoplay %}
 {{ objname }}.show();
