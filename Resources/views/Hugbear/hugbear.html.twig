@@ -49,11 +49,11 @@ var {{ objname }} = {
             self.canvas.setAttribute('width', window.innerWidth);
             self.canvas.setAttribute('height', window.innerHeight);
             for (var i = 0; i < self.config.hugbears; i++) {
-                if (self.hugbears.position[0] > self.canvas.width) {
-                    self.hugbears.position[0] = self.canvas.width;
+                if (self.hugbears[i].position[0] > self.canvas.width) {
+                    self.hugbears[i].position[0] = self.canvas.width;
                 }
-                if (self.hugbears.position[1] > self.canvas.height) {
-                    self.hugbears.position[1] = self.canvas.height;
+                if (self.hugbears[i].position[1] > self.canvas.height) {
+                    self.hugbears[i].position[1] = self.canvas.height;
                 }
             }
         };
