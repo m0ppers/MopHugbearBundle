@@ -6,6 +6,8 @@ To get an idea of what it is doing:
 
 ![My image](http://m0ppers.github.com/MopHugbearBundle/hugbears.png)
 
+[![Build Status](https://secure.travis-ci.org/m0ppers/MopHugbearBundle.png?branch=master)](http://travis-ci.org/m0ppers/MopHugbearBundle)
+
 ## Installation
 
 ### 1. Install using composer
