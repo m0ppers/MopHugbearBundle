@@ -16,6 +16,7 @@ if (!window.requestAnimationFrame) {
 var {{ objname }} = {
     activated: false,
     config: {{ hugbearconfig|json_encode|raw }},
+    texting: {},
     show: function() {
         this.activated = true;
         if (localStorage && localStorage.setItem) {
@@ -40,7 +41,7 @@ var {{ objname }} = {
                     rotation: Math.random() * 360 * Math.PI / 180,
                     srotation: self.config.minrotation + (self.config.maxrotation-self.config.minrotation) * Math.random() *  (Math.random() > 0.5 ? -1 : 1),
                     sx: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1),
-                    sy: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1),
+                    sy: self.config.minspeed + (self.config.maxspeed-self.config.minspeed) * Math.random() * (Math.random() > 0.5 ? -1 : 1)
                 });
             }
             self.animate();
@@ -61,6 +62,35 @@ var {{ objname }} = {
             }
         };
     },
+    drawText: function() {
+        var text = this.config.text;
+        this.context.font = this.config.fontsize + "px " + this.config.fontfamily;
+        var metric = this.context.measureText(text);
+
+        var margin = 5;
+
+        this.context.beginPath();
+        this.context.moveTo(0 , -this.img.height/2);
+        this.context.lineTo(-5, -this.img.height/2 -5);
+        
+        this.context.lineTo(-metric.width/2 -margin, -this.img.height/2 - 5);
+        this.context.quadraticCurveTo(-metric.width/2-margin-10, -this.img.height/2 -5 -this.config.fontsize/2 - margin, -metric.width/2 -margin, -this.img.height/2 -5 - this.config.fontsize - 2*margin);
+        this.context.lineTo(metric.width/2+margin, -this.img.height/2 -5 - this.config.fontsize - 2*margin);
+        this.context.quadraticCurveTo(metric.width/2+margin+10, -this.img.height/2 -5 -this.config.fontsize/2 - margin, metric.width/2+margin, -this.img.height/2 -5);
+        this.context.lineTo(metric.width/2 + margin, -this.img.height/2 -5);
+
+        this.context.lineTo(5, -this.img.height/2 -5);
+        this.context.closePath();
+        this.context.fillStyle = 'white';
+        this.context.strokeStyle = 'black';
+        this.context.stroke();
+        this.context.fill();
+        
+        this.context.fillStyle = "black";
+        this.context.textAlign = "center";
+        this.context.textBaseline = "middle";
+        this.context.fillText(text, 0, -5-this.img.height/2-margin-this.config.fontsize/2);
+    },
     animate: function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         var tmp;
@@ -70,7 +100,13 @@ var {{ objname }} = {
 
         requestAnimFrame(function() {
             return self.animate();
-        });
+        }); 
+        var date = new Date();
+        var ms = date.getTime();
+        while (Object.keys(this.texting).length < this.config.talkingbears) {
+            var index = Math.round(Math.random() * (this.hugbears.length-1));
+            this.texting[index] = ms + Math.round(Math.random() * (this.config.maxtextshow - this.config.mintextshow)) + this.config.mintextshow;
+        }
         for (var i=0;i<this.hugbears.length;i++) {
             var hugbear=this.hugbears[i];
             hugbear.rotation+=hugbear.srotation;
@@ -85,6 +121,13 @@ var {{ objname }} = {
             this.context.translate(hugbear.position[0] + this.img.width/2, hugbear.position[1] + this.img.height/2);
             this.context.rotate(hugbear.rotation);
             this.context.drawImage(this.img, -this.img.width/2, -this.img.height/2);//, this.img.width, this.img.height);
+            
+            if (this.texting[i]) {
+                this.drawText();
+                if (this.texting[i] <= date.getTime()) {
+                    delete this.texting[i];
+                }
+            }
             this.context.restore();
         }
     },

@@ -29,7 +29,17 @@ class MopHugbearExtension extends Extension
         foreach (array('hugbears', 'minspeed', 'maxspeed', 'minrotation', 'maxrotation') as $option) {
             $hugbearConfig[$option] = (float) $config[$option];
         }
-        foreach (array('speed', 'rotation') as $option) {
+        $hugbearConfig['text'] = $config['text'];
+        $hugbearConfig['fontfamily'] = $config['fontfamily'];
+        $hugbearConfig['fontsize'] = (int) $config['fontsize'];
+        $hugbearConfig['mintextshow'] = (int) $config['mintextshow'];
+        $hugbearConfig['maxtextshow'] = (int) $config['maxtextshow'];
+        $hugbearConfig['talkingbears'] = (int) $config['talkingbears'];
+        
+        if ($hugbearConfig['talkingbears'] > $hugbearConfig['hugbears']) {
+            throw new \InvalidArgumentException('Talking bears may not be greater than the number of hugbears!');
+        }
+        foreach (array('speed', 'rotation', 'textshow') as $option) {
             if ($hugbearConfig['min' . $option] < 0) {
                 throw new \InvalidArgumentException('min' . $option . ' must be at least 0');
             }
@@ -37,6 +47,10 @@ class MopHugbearExtension extends Extension
                 throw new \InvalidArgumentException('max' . $option . ' must be greater or equal than min' . $option);
             }
         }
+        if ($hugbearConfig['fontsize'] <= 0) {
+            throw new \InvalidArgumentException('Fontsize must be > 0');
+        }
+
         $container->setParameter('mop_hugbear.hugbearconfig', $hugbearConfig);
         
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

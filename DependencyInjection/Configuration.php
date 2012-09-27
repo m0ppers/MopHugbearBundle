@@ -28,6 +28,12 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('maxspeed')->defaultValue(2)->end()
                 ->scalarNode('minrotation')->defaultValue(0.001)->end()
                 ->scalarNode('maxrotation')->defaultValue(0.1)->end()
+                ->scalarNode('fontsize')->defaultValue(15)->end()
+                ->scalarNode('fontfamily')->defaultValue('Helvetica')->end()
+                ->scalarNode('mintextshow')->defaultValue('2000')->end()
+                ->scalarNode('maxtextshow')->defaultValue('5000')->end()
+                ->scalarNode('text')->defaultValue('Hi!')->end()
+                ->scalarNode('talkingbears')->defaultValue(1)->end()
             ->end();
 
         return $treeBuilder;
