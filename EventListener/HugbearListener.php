@@ -6,6 +6,7 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class HugbearListener implements EventSubscriberInterface
 {
@@ -34,7 +35,12 @@ class HugbearListener implements EventSubscriberInterface
         if ($request->isXmlHttpRequest() || $response->isRedirect()) {
             return;
         }
-        
+
+        $this->hugResponse($response);
+    }
+
+    private function hugResponse(Response $response)
+    {
         $content = $response->getContent();
         if (($pos = strpos($content, '<body')) !== false && in_array(substr($content, $pos+5, 1), array('>', ' '))) {
             $insertPosition = strpos($content, '>', $pos) + 1;
