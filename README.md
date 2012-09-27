@@ -4,7 +4,7 @@ This is a little gimmick i wrote. It adds hugbears to your Symfony2 project!
 
 To get an idea of what it is doing:
 
-![My image](m0ppers.github.com/MopHugbearBundle/hugbears.png)
+![My image](http://m0ppers.github.com/MopHugbearBundle/hugbears.png)
 
 ## Installation
 
@@ -12,12 +12,13 @@ To get an idea of what it is doing:
 
 composer.json:
 
-```js
+``` js
 {
     "require": {
         "mop/hugbearbundle": "*"
     }
 }
+```
 
 ``` bash
 $ php composer.phar update mop/hugbearbundle
