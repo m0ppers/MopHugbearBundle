@@ -11,7 +11,7 @@
 
     <services>
         <service id="mop_hugbear.hugger" class="%mop_hugbear.hugger.class%">
-            <tag name="kernel.event_subscriber" />
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
             <argument type="service" id="templating.engine.twig" />
             <argument>%mop_hugbear.autoplay%</argument>
             <argument>%mop_hugbear.objname%</argument>
