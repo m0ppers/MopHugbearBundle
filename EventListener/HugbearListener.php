@@ -32,7 +32,11 @@ class HugbearListener implements EventSubscriberInterface
         $response = $event->getResponse();
         $request = $event->getRequest();
 
-        if ($request->isXmlHttpRequest() || $response->isRedirect()) {
+        if ($request->isXmlHttpRequest()
+            || $response->isRedirect()
+            || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+            || 'html' !== $request->getRequestFormat()
+        ) {
             return;
         }
 
