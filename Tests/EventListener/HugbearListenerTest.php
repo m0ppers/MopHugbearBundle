@@ -9,7 +9,7 @@ class HugbearListenerTest extends \PHPUnit_Framework_TestCase
 {
     public function testHugbearInBody()
     {
-        $listener = new HugbearListener($this->getTemplatingMock(), false, 'hugbear', array());
+        $listener = new HugbearListener($this->getTemplatingMock(), false, 'hugbear', '', array());
         $response = new Response();
         $response->setContent('<html><body></body></html>');
 
@@ -22,10 +22,8 @@ class HugbearListenerTest extends \PHPUnit_Framework_TestCase
     
     protected function getTemplatingMock()
     {
-        $templating = $this->getMock('Symfony\Bundle\TwigBundle\TwigEngine', array(), array(), '', false);
-        $templating->expects($this->any())
-            ->method('render')
-            ->will($this->returnValue('HUGBEAR'));
+        $templating = \Mockery::mock('Symfony\Bundle\TwigBundle\TwigEngine');
+        $templating->shouldReceive('render')->andReturn('HUGBEAR');
 
         return $templating;
     }

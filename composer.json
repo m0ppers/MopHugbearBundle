@@ -16,5 +16,8 @@
     "require": {
         "symfony/web-profiler-bundle": ">=2.1",
         "symfony/framework-bundle": ">=2.1"
+    },
+    "require-dev": {
+        "mockery/mockery": "0.8.*"
     }
 }
