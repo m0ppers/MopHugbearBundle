@@ -15,6 +15,7 @@
             <argument type="service" id="templating.engine.twig" />
             <argument>%mop_hugbear.autoplay%</argument>
             <argument>%mop_hugbear.objname%</argument>
+            <argument>%mop_hugbear.asset%</argument>
             <argument>%mop_hugbear.hugbearconfig%</argument>
         </service>
         <service id="mop_hugbear.datacollector" class="%mop_hugbear.datacollector.class%">

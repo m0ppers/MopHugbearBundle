@@ -14,12 +14,14 @@ class HugbearListener implements EventSubscriberInterface
     private $autoplay;
     private $objname;
     private $hugbearConfig;
+    private $asset;
 
-    public function __construct(TwigEngine $twigEngine, $autoplay, $objname, array $hugbearConfig)
+    public function __construct(TwigEngine $twigEngine, $autoplay, $objname, $asset, array $hugbearConfig)
     {
         $this->twigEngine    = $twigEngine;
         $this->autoplay      = $autoplay;
         $this->objname       = $objname;
+        $this->asset         = $asset;
         $this->hugbearConfig = $hugbearConfig;
     }
 
@@ -51,6 +53,7 @@ class HugbearListener implements EventSubscriberInterface
             
             $arguments = array('autoplay'      => $this->autoplay,
                                'objname'       => $this->objname,
+                               'asset'         => $this->asset,
                                'hugbearconfig' => $this->hugbearConfig,
                               );
             $hugbear = $this->twigEngine->render('MopHugbearBundle:Hugbear:hugbear.html.twig', $arguments);

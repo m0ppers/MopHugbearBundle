@@ -24,6 +24,7 @@ class MopHugbearExtension extends Extension
 
         $container->setParameter('mop_hugbear.autoplay', (bool) $config['autoplay']);
         $container->setParameter('mop_hugbear.objname', 'hugit' . uniqid());
+        $container->setParameter('mop_hugbear.asset', $config['asset']);
 
         $hugbearConfig = array();
         foreach (array('hugbears', 'minspeed', 'maxspeed', 'minrotation', 'maxrotation') as $option) {

@@ -46,7 +46,7 @@ var {{ objname }} = {
             }
             self.animate();
         };
-        this.img.src = '{{ asset('bundles/mophugbear/images/hugbear.png') }}';
+        this.img.src = '{{ asset(asset) }}';
         window.onresize = function() {
             if (!self.activated)
                 return;
