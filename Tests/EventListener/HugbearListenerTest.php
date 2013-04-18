@@ -13,11 +13,28 @@ class HugbearListenerTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
         $response->setContent('<html><body></body></html>');
 
+        $this->hugResponse($listener, $response);
+
+        $this->assertEquals('<html><body>HUGBEAR</body></html>', $response->getContent());
+    }
+
+    public function testHugbearNonHtml()
+    {
+        $listener = new HugbearListener($this->getTemplatingMock(), false, 'hugbear', '', array());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/javascript');
+        $response->setContent('<html><body></body></html>');
+
+        $this->hugResponse($listener, $response);
+
+        $this->assertEquals('<html><body></body></html>', $response->getContent());
+    }
+
+    private function hugResponse(HugbearListener $listener, Response $response)
+    {
         $m = new \ReflectionMethod($listener, 'hugResponse');
         $m->setAccessible(true);
         $m->invoke($listener, $response);
-
-        $this->assertEquals('<html><body>HUGBEAR</body></html>', $response->getContent());
     }
     
     protected function getTemplatingMock()

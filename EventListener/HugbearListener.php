@@ -35,8 +35,6 @@ class HugbearListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if ($request->isXmlHttpRequest()
-            || $response->isRedirect()
-            || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
             || 'html' !== $request->getRequestFormat()
         ) {
             return;
@@ -47,6 +45,11 @@ class HugbearListener implements EventSubscriberInterface
 
     private function hugResponse(Response $response)
     {
+        if ($response->isRedirect()
+            || ($response->headers->has('Content-Type') && false === strpos($response->headers->get('Content-Type'), 'html'))
+        ) {
+            return;
+        }
         $content = $response->getContent();
         if (($pos = strpos($content, '<body')) !== false && in_array(substr($content, $pos+5, 1), array('>', ' '))) {
             $insertPosition = strpos($content, '>', $pos) + 1;
