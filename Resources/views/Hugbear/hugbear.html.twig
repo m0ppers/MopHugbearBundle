@@ -24,14 +24,14 @@ var {{ objname }} = {
         }
         this.canvas=document.getElementById('hugbear_canvas');
         if (!this.canvas || !this.canvas.getContext) {
-            if (console && console.log) {
+            if (typeof console != 'undefined' && console.log) {
                 console.log('Canvas not supported!');
             }
             return;
         }
         this.context=this.canvas.getContext('2d');
         if (!this.context) {
-            if (console && console.log) {
+            if (typeof console != 'undefined' && console.log) {
                 console.log('Canvas not supported!');
             }
             return;
