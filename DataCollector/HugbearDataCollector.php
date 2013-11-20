@@ -9,10 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 class HugbearDataCollector extends DataCollector
 {
     private $objname;
+    private $autoplay;
 
     public function __construct($autoplay, $objname)
     {
         $this->objname  = $objname;
+        $this->autoplay = $autoplay;
     }
 
     /**
