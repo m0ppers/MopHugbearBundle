@@ -22,7 +22,7 @@ class MopHugbearExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('mop_hugbear.autoplay', (bool) $config['autoplay']);
+        $container->setParameter('mop_hugbear.autoplay', $config['autoplay']);
         $container->setParameter('mop_hugbear.objname', 'hugit' . uniqid());
         $container->setParameter('mop_hugbear.asset', $config['asset']);
 

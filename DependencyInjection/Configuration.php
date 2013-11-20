@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('asset')->defaultValue('bundles/mophugbear/images/hugbear.png')->end()
-                ->scalarNode('autoplay')->defaultFalse()->end()
+                ->booleanNode('autoplay')->defaultFalse()->end()
                 ->scalarNode('hugbears')->defaultValue(100)->end()
                 ->scalarNode('minspeed')->defaultValue(0.5)->end()
                 ->scalarNode('maxspeed')->defaultValue(2)->end()
